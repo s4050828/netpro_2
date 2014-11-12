@@ -1,0 +1,247 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package chakkaphan.kehachit.s4050828.kmitl.ac.th.java.web.browser.network.programming.pkgclass.assignment;
+
+/**
+ *
+ * @author Phyco_Gun
+ */
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+public class ChakkaphanKehachitS4050828KmitlAcThJavaWebBrowserNetworkProgrammingClassAssignment extends JFrame{
+
+    /**
+     * @param args the command line arguments
+     */
+    private TextField typeA = new TextField();
+    private TextField typeB = new TextField();
+    
+    private JEditorPane header = new JEditorPane();
+    private JScrollPane txtHeader = new JScrollPane(header);
+    private JEditorPane tread = new JEditorPane();
+    private JScrollPane txtTread = new JScrollPane(tread);
+    
+    private JEditorPane displayA = new JEditorPane();
+    private JScrollPane frameA = new JScrollPane(displayA);
+    private JEditorPane displayB = new JEditorPane();
+    private JScrollPane frameB = new JScrollPane(displayB);
+    
+    private JLabel urlA = new JLabel();
+    private JLabel urlB = new JLabel();
+    
+    private JLabel lblTread = new JLabel();
+    private JLabel lblHeader = new JLabel();
+    
+    private JLabel cantBack = new JLabel();
+    private JButton back = new JButton();
+    private JButton enter = new JButton();
+    
+    private ArrayList<String> cookieA = new ArrayList<String>();
+    private ArrayList<String> cookieB = new ArrayList<String>();
+    private int cookieCount = 0;
+    
+    public static void main(String[] args) {
+        // TODO code application logic here
+        ChakkaphanKehachitS4050828KmitlAcThJavaWebBrowserNetworkProgrammingClassAssignment file
+                = new ChakkaphanKehachitS4050828KmitlAcThJavaWebBrowserNetworkProgrammingClassAssignment();
+        //ยังหาวิธีเปลี่ยนชื่อ class ให้มันไม่ตรงกับชื่อไฟล์ไม่ได้
+        file.frameHandler();
+        
+    }
+    
+    public void frameHandler(){
+        setTitle("Java Web Browser");
+        setSize(1024,768);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+        setResizable(false);
+        setLayout(null);
+        setLocationRelativeTo(null);
+        addComponentsToFrame(getContentPane());
+        urlA.setText("http://");
+        urlB.setText("http://");
+        enter.setText("Get link");
+        back.setText("Back");
+        cookieA.add(0,"HTTP not found(A)");
+        cookieB.add(0,"HTTP not found(B)");
+        lblTread.setText("Tread");
+        tread.setText("..... Web Browser Start! ..... \n");
+        lblHeader.setText("Header");
+        header.setText("..... Printing Response Header ..... \n");
+    }
+    
+    public void addComponentsToFrame(Container pane){
+        Insets insets = getInsets();
+        pane.add(typeA);
+        pane.add(typeB);
+        pane.add(frameA);
+        pane.add(frameB);
+        pane.add(urlA);
+        pane.add(urlB);
+        pane.add(back);
+        pane.add(cantBack);
+        pane.add(enter);
+        pane.add(txtHeader);
+        pane.add(lblHeader);
+        pane.add(txtTread);
+        pane.add(lblTread);
+
+        
+        urlA.setBounds(10-insets.left, 35-insets.top, 100, 20);
+        typeA.setBounds(50-insets.left, 35-insets.top, 610, 20);
+        frameA.setBounds(10-insets.left, 60-insets.top, 650, 330);
+
+        urlB.setBounds(10-insets.left, 405-insets.top, 100, 20);
+        typeB.setBounds(50-insets.left, 405-insets.top, 610, 20);
+        frameB.setBounds(10-insets.left, 430-insets.top, 650, 330);
+        
+        cantBack.setBounds(670-insets.left, 740-insets.top, 300, 20);
+        back.setBounds(792-insets.left, 740-insets.top, 100, 20);
+        enter.setBounds(792-insets.left, 35-insets.top, 100, 20);
+        
+        txtTread.setBounds(670-insets.left, 85-insets.top,350 , 340);
+        lblTread.setBounds(670-insets.left, 60-insets.top,100 , 20);
+        
+        txtHeader.setBounds(670-insets.left, 455-insets.top,350 , 280);
+        lblHeader.setBounds(670-insets.left, 430-insets.top,100 , 20);
+        actionListenerCalls();
+    }
+    
+    private void actionListenerCalls(){
+    
+        displayA.addHyperlinkListener(new HyperlinkListener(){
+            public void hyperlinkUpdate(HyperlinkEvent e){
+                if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
+                    loadDataA(e.getURL().toString());
+                }
+            }
+        });
+        
+        displayB.addHyperlinkListener(new HyperlinkListener(){
+            public void hyperlinkUpdate(HyperlinkEvent e){
+                if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
+                    loadDataB(e.getURL().toString());
+                }
+            }
+        });
+        
+        back.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                cookieCount--;
+                
+                if(cookieCount>0)
+                {
+                    cookieA.remove(cookieCount+1);
+                    tread.setText(tread.getText()+"Tread A : Cookie removed\n");
+                    cookieB.remove(cookieCount+1);
+                    tread.setText(tread.getText()+"Tread B : Cookie removed\n");
+                    
+                    typeA.setText(cookieA.get(cookieCount).toString());
+                    tread.setText(tread.getText()+"Tread A : back page url = http://"
+                        +typeA.getText()+"\n");
+                    loadDataA("http://"+cookieA.get(cookieCount).toString());
+                    typeB.setText(cookieB.get(cookieCount).toString());
+                    tread.setText(tread.getText()+"Tread B : back page url = http://"
+                        +typeA.getText()+"\n");
+                    loadDataB("http://"+cookieB.get(cookieCount).toString());
+                }
+                else
+                {
+                    cookieCount = 0;
+                    typeA.setText(cookieA.get(cookieCount).toString());
+                    typeB.setText(cookieB.get(cookieCount).toString());
+                    tread.setText(tread.getText()+"Tread A : url not found\n"
+                            + "Tread B : url not found\n");
+                    cantBack.setText("Can't back anymore.");
+                }
+            }
+        });
+        
+        enter.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                //Count cookie
+                tread.setText(tread.getText()+"Tread A : *** Start ***\n");
+                tread.setText(tread.getText()+"Tread B : *** Start ***\n");
+                cookieCount++;
+                //save cookie
+                tread.setText(tread.getText()+"Tread A : save cookie A\n");
+                cookieA.add(cookieCount,typeA.getText());
+                tread.setText(tread.getText()+"Tread B : save cookie B\n");
+                cookieB.add(cookieCount,typeB.getText());
+                //load urlA
+                tread.setText(tread.getText()+"Tread A : get page url = http://"
+                        +typeA.getText()+"\n");
+                loadDataA("http://"+typeA.getText());
+                headerChecker("http://"+typeA.getText().toString(),"Tread A : ");
+                //load urlB
+                tread.setText(tread.getText()+"Tread B : get page url = http://"
+                        +typeB.getText()+"\n");
+                loadDataB("http://"+typeB.getText());
+                headerChecker("http://"+typeB.getText().toString(),"Tread B : ");
+                
+            }
+        });
+        
+        
+    }
+        
+    private void loadDataA(String text){
+        try{
+            tread.setText(tread.getText()+"Tread A : Loading...\n");
+            displayA.setPage(text);
+            tread.setText(tread.getText()+"Tread A : *** Complete ***\n\n");
+        }catch(Exception e){
+            System.out.println("A - Error");
+        }
+    }
+    
+    private void loadDataB(String text){
+        try{
+            tread.setText(tread.getText()+"Tread B : Loading...\n");
+            displayB.setPage(text);
+            tread.setText(tread.getText()+"Tread B : *** Complete ***\n\n");
+        }catch(Exception e){
+            System.out.println("B - Error");
+        }
+    }
+    
+    private void headerChecker(String txtUrl,String tType){
+        String textUrl = txtUrl;
+        String treadType = tType;
+        try {
+ 
+	URL obj = new URL(textUrl);
+	URLConnection conn = obj.openConnection();
+	Map<String, List<String>> map = conn.getHeaderFields();
+ 
+	for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                header.setText(header.getText()+treadType+entry.getKey() 
+                           +" ,Value : "+entry.getValue()+"\n");
+	}
+        header.setText(header.getText()+"\nGet Response Header By "+treadType+"\n");
+	String server = conn.getHeaderField("Server");
+ 
+	if (server == null) {
+                header.setText(header.getText()+treadType+"'Server' is not found!\n");
+	} else {
+                header.setText(header.getText()+treadType+"Server - " + server+"\n");
+	}
+        header.setText(header.getText()+"Done\n\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+}
